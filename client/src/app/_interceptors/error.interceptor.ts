@@ -25,7 +25,6 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
               toastr.error(error.error, error.status)
             }
             break;
-
           case 401:
             toastr.error('Unauthroised', error.status)
             break;
@@ -36,7 +35,6 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
             const navigationExtres: NavigationExtras = { state: { error: error.error } }
             router.navigateByUrl('/server-error', navigationExtres)
             break;
-
           default:
             toastr.error('Something unexpected went wrong')
             break;

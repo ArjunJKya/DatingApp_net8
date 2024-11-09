@@ -1,37 +1,45 @@
 
 using API.Data;
+using API.DTOs;
 using API.Entities;
+using API.Interface;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
+
 {
-    // [Route("api/[controller]")] // /api/users
-    // [ApiController]
-    public class UsersController(DataContext context) : BaseApiController
+  [Authorize]
+  public class UsersController( IUserRepository userRepostiory,IMapper mapper) : BaseApiController
+  {
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers()
     {
-        // private readonly DataContext _context;
-        // public UsersController(DataContext context)
-        // {
-        //     this._context=context;
-        // }
-        [AllowAnonymous]
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<AppUser>>>GetUsers()
-        {
-          var users = await  context.Users.ToListAsync();
-          return users;
-        }
+      var users = await userRepostiory.GetMemberAsync();
 
-       [Authorize]
-       [HttpGet("{id:int}")] // /api/users/3
-        public async Task<ActionResult<AppUser>>GetUsers(int id) 
-        {
-          var user =await context.Users.FindAsync(id);
-          if(user==null)return NotFound();
-          return user;
-        }
-
+      return Ok(users);
     }
+
+
+    // [HttpGet("{id:int}")] // /api/users/3
+    // public async Task<ActionResult<AppUser>> GetUsers(int id)
+    // {
+    //   var user = await userRepostiory.GetUserByIdAsync(id);
+    //   if (user == null) return NotFound();
+    //   return user;
+    // }
+
+    [HttpGet("{username}")] // /api/users/username
+    public async Task<ActionResult<MemberDto>> GetUsers(string username)
+    {
+      var user = await userRepostiory.GetMemberAsync(username);
+
+      if (user == null) return NotFound();
+
+      return Ok(user);
+    }
+
+  }
 }
