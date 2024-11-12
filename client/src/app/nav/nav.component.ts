@@ -22,6 +22,7 @@ export class NavComponent {
   modal: any = {};
 
   login() {
+    debugger
     this.accountService.login(this.modal).subscribe({
       next: _ => {
        this.router.navigateByUrl('/members')
