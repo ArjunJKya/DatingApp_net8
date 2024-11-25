@@ -80,7 +80,10 @@
 
             </tab>
             <tab heading="Edit photos">
-                photo will go here
+               <app-photo-editor
+                [member]="member" 
+                (memberChange)="onMemberChange($event)"
+                ></app-photo-editor>
             </tab>
 
 
